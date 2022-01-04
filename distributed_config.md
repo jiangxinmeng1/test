@@ -17,9 +17,11 @@ The default configration file `system_vars_config.toml` is generated.
 In the default configration file 'system_vars_config.toml', following parameters need to be changed.
 
 * **nodeID**
+
     `nodeID` is the Node ID of the cube. In a cluster, each node should have a different `nodeID`.
 
 * **addr-raft and addr-advertise-raft**
+
     `addr-raft` is the address for raft-group rpc communication. 
 
     It is the 10000 port of the node.
@@ -38,6 +40,7 @@ In the default configration file 'system_vars_config.toml', following parameters
     ```
 
 * **addr-client and addr-advertise-client**
+
     `addr-client` is the address for cube service.
     It is the 20000 port of the node.
     ```
@@ -55,15 +58,18 @@ In the default configration file 'system_vars_config.toml', following parameters
     ```
 
 * **dir-data**
+
     `dir-data` is the directory for cube data. In a cluster, each node should have a different `dir-data`.
 
 * **prophet name**
+
     `name` in `Prophet Configs` is the name of the node. In a cluster, each node should have a different prophet name.
     ```
     name = "node0"
     ```
 
 * **rpc-addr and rpc-advertise-addr**
+
     `rpc-addr` is the address for other clients to access prophet. 
     It is the 30000 port of the node.
     ```
@@ -81,6 +87,7 @@ In the default configration file 'system_vars_config.toml', following parameters
     ```
 
 * **storage-node**
+
     `storage-node` is whether the node is a pure storage node.
     For the three prophet nodes, `storage-node` is `true`.
     ```
@@ -92,6 +99,7 @@ In the default configration file 'system_vars_config.toml', following parameters
     ```
 
 * **external-etcd**
+
     For the three prophet nodes, `external-etcd` is empty.
     ```
     external-etcd = ["", "", ""]
@@ -103,6 +111,7 @@ In the default configration file 'system_vars_config.toml', following parameters
     ```
 
 * **join**
+
     `join` is for the second and third prophet nodes to join the raft group.
     For the first prophet node, `join` is a empty string.
     ```
@@ -115,6 +124,7 @@ In the default configration file 'system_vars_config.toml', following parameters
     For pure storage nodes, there's no need to adjust `join`.
 
 * **client-urls and advertise-client-urls**
+
     `client-urls` is exposed to other nodes in the cluster.
     It is 40000 port of the node
     ```
@@ -132,6 +142,7 @@ In the default configration file 'system_vars_config.toml', following parameters
     ```
 
 * **peer-urls and advertise-peer-urls**
+
     `peer-urls` is the list of peer URLs to be listened to by a prophet node. It is the 40000 port of the node.
     ```
     peer-urls = "http://localhost:50000"
@@ -148,6 +159,7 @@ In the default configration file 'system_vars_config.toml', following parameters
     ```
 
 * **max-replicas**
+
     `max-replicas` is the max number of replica in a prophet group. It should be 3.
     ```
     max-replicas = 3
