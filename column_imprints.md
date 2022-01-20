@@ -59,11 +59,11 @@ column imprints索引所占空间一般为column大小的1/8。
 
 ![imprint_entropy.PNG](image/imprint_entropy.PNG)
 
-实验数据分布：
+* 实验数据分布：
 
 ![distribute_enropia.PNG](image/distribute_enropia.PNG)
 
-实验中index占存储空间的大小：
+* 实验中index占存储空间的大小：
 
 ![indexsize_entropia.PNG](image/indexsize_entropia.PNG)
 
@@ -105,7 +105,5 @@ Query中最大的时间开销在于排除假阳性，即遍历那些满足mask�
 
 * ssb中lineorder表中lo_discount和lo_quantity的数据分布：
 
-![lo_discount.PNG](image/lo_discount.PNG)
-
-![lo_quantity.PNG](image/lo_quantity.PNG)
+![lo_discount.PNG](image/lo_discount.PNG)![lo_quantity.PNG](image/lo_quantity.PNG)
 
