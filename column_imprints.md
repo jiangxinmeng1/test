@@ -50,10 +50,12 @@ column imprint建立的时间复杂度是线性的。最大的开销在于确定
 ![column_imprint_compression.PNG](image/column_imprint_compression.PNG)
 
 连续相同的imprint会被压缩成一个值存储。但是对大多数数据，压缩的效果不明显。
+
 column imprints索引所占空间一般为column大小的1/8。
 
-(Column Imprints: A Secondary Index Structure)
-entropia:
+### 存储空间实验 (Column Imprints: A Secondary Index Structure)
+
+* entropia):
 
 ![imprint_entropy.PNG](image/imprint_entropy.PNG)
 
@@ -89,18 +91,19 @@ monetdb不支持自动更新，在列插入新数据后，索引会失效。
    如果满足mask但是不满足innermask，则遍历cacheline，对每个元素判断是否符合查询，选中符合的元素。
    如果满足innermask，选中整个cacheline。
 
-### Query Latency
-
 Query中最大的时间开销在于排除假阳性，即遍历那些满足mask但是不满足innermask的cacheline。
 
-当column的分布有cluster的时候，column imprints的表现比较好（Zone Map Layout Optimization）。
+### Query Latency 实验 (Zone Map Layout Optimization)
+
+* 当column的分布有cluster的时候，column imprints的表现比较好。
+
 ![query_latency.PNG](image/query_latency.PNG)
 
-实验中的数据分布：
+* 实验中的数据分布：
 
 ![distribution_paper.PNG](image/distribution_paper.PNG)
 
-ssb中lineorder表中lo_discount和lo_quantity的数据分布：
+* ssb中lineorder表中lo_discount和lo_quantity的数据分布：
 
 ![lo_discount.PNG](image/lo_discount.PNG)
 
