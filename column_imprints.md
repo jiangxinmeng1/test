@@ -103,7 +103,7 @@ Query中最大的时间开销在于排除假阳性，即遍历那些满足mask�
 
 ![distribution_paper.PNG](image/distribution_paper.PNG)
 
-* ssb中lineorder表中lo_discount和lo_quantity的数据分布：
+* ssb中lineorder表中除了主键和String类型的数据分布：
 
-![lo_discount.PNG](image/lo_discount.PNG)![lo_quantity.PNG](image/lo_quantity.PNG)
+![lo_distribution_1.PNG](image/lo_distribution_2.PNG)![lo_distribution_1.PNG](image/lo_distribution_2.PNG)
 
