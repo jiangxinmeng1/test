@@ -105,5 +105,5 @@ Query中最大的时间开销在于排除假阳性，即遍历那些满足mask�
 
 * ssb中lineorder表中除了主键和String类型的数据分布：
 
-![lo_distribution_1.PNG](image/lo_distribution_2.PNG)![lo_distribution_1.PNG](image/lo_distribution_2.PNG)
+![lo_distribution_2.PNG](image/lo_distribution_2.PNG)![lo_distribution_1.PNG](image/lo_distribution_2.PNG)
 
