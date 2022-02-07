@@ -10,7 +10,7 @@
 
    1. 触发时机
    
-        在catalog.Compaction()执行时触发，检查当前的commit id和上次checkpoint id的间隔。如果间隔大于defaultCheckpointThrehold，则触发checkpoint。
+        通过catalog.checkpointer触发。每过一分钟检查当前的commit id和上次checkpoint id的间隔。如果间隔大于DefaultCheckpointDelta，则触发checkpoint。
 
    2. 生成checkpoint entry
 
