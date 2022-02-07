@@ -10,23 +10,60 @@
 
    1. 触发时机
    
-        通过catalog.checkpointer触发。每过一分钟检查当前的commit id和上次checkpoint id的间隔。如果间隔大于DefaultCheckpointDelta，则触发checkpoint。
+        通过catalog.checkpointer触发。每间隔DefaultCheckpointInterval时间检查当前的commit id和上次checkpoint id之间的commit数量。如果commit数量大于DefaultCheckpointDelta，则触发checkpoint。
+        ```golang
+          catalog.checkpointer = worker.NewHeartBeater(DefaultCheckpointInterval, &catalogCheckpointer{
+	          	catalog:   catalog,
+	          })
+
+          type catalogCheckpointer struct{
+	          catalog *Catalog
+          }
+
+          func (c *catalogCheckpointer)OnExec(){
+          	previousCheckpointId := c.catalog.GetCheckpointId()
+          	commitId := c.catalog.Store.GetSyncedId()
+          	if commitId < previousCheckpointId+DefaultCheckpointDelta{
+          		return
+          	}
+          	c.catalog.Checkpoint()
+          }
+          
+          func (c *catalogCheckpointer)OnStopped(){}
+        ```
 
    2. 生成checkpoint entry
 
-        * logentrys
+     ```golang
+     //记录的范围是上次checkpoint后发生变化的database, table, segment, block。只会记录最新的commit信息。
 
-        database, table, segment, block
+     //会额外记录所有database的名字，和每个database中所有table的名字。
+     //用来检查上次checkpoint与本次之间被删除的database和table。
+     
+     type segmentCheckpoint struct {
+	     Blocks     []*blockLogEntry
+	     NeedReplay bool
+	     LogEntry   segmentLogEntry
+     }
 
-        记录的范围是上次checkpoint后发生变化的database, table, segment, block 。(i.e. commitId > previousCheckpointId)
+     type tableCheckpoint struct {
+	     Segments   []*segmentCheckpoint
+	     NeedReplay bool
+	     LogEntry   tableLogEntry
+     }
 
-        记录的内容与对应的logEntry相似（e.g. 对 table 会记录类似tableLogEntry的内容），会记录基本信息和commit信息。只会记录最新的commit信息。
-   
-        * databaseset & tableset
-   
-        会额外记录所有database的名字，和每个database中所有table的名字。
+     type databaseCheckpoint struct {
+	     Tables     map[string]*tableCheckpoint
+	     NeedReplay bool
+	     LogEntry   databaseLogEntry
+     }
 
-        用来检查上次checkpoint与本次之间被删除的database和table。
+     type catalogLogEntry struct {
+	     Databases map[string]*databaseCheckpoint
+	     Range     *common.Range
+     }
+
+     ```
 
 2. replay
    
