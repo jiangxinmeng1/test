@@ -12,36 +12,33 @@
    
         通过catalog.checkpointer触发。每间隔DefaultCheckpointInterval时间检查当前的commit id和上次checkpoint id之间的commit数量。如果commit数量大于DefaultCheckpointDelta，则触发checkpoint。
         ```golang
+        //用HeartBeater定时检查
           catalog.checkpointer = worker.NewHeartBeater(DefaultCheckpointInterval, &catalogCheckpointer{
 	          	catalog:   catalog,
 	          })
 
-          type catalogCheckpointer struct{
-	          catalog *Catalog
-          }
-
           func (c *catalogCheckpointer)OnExec(){
           	previousCheckpointId := c.catalog.GetCheckpointId()
           	commitId := c.catalog.Store.GetSyncedId()
+               //检查commit数量
           	if commitId < previousCheckpointId+DefaultCheckpointDelta{
           		return
           	}
           	c.catalog.Checkpoint()
           }
           
-          func (c *catalogCheckpointer)OnStopped(){}
         ```
 
    2. 生成checkpoint entry
 
-     ```golang
-     //记录的范围是上次checkpoint后发生变化的database, table, segment, block。只会记录最新的commit信息。
+      记录的范围是上次checkpoint后发生变化的database, table, segment, block和所有database的safeid。只会记录最新的commit信息。
 
-     //会额外记录所有database的名字，和每个database中所有table的名字。
-     //用来检查上次checkpoint与本次之间被删除的database和table。
+      会额外记录所有database的名字，和每个database中所有table的名字。用来检查上次checkpoint与本次之间被删除的database和table。
+    ```golang
+    
      
-     type segmentCheckpoint struct {
-	     Blocks     []*blockLogEntry
+    type segmentCheckpoint struct {
+	      Blocks     []*blockLogEntry
 	     NeedReplay bool
 	     LogEntry   segmentLogEntry
      }
@@ -60,10 +57,11 @@
 
      type catalogLogEntry struct {
 	     Databases map[string]*databaseCheckpoint
+         safeId    map[uint64]uint64
 	     Range     *common.Range
      }
 
-     ```
+    ```
 
 2. replay
    
@@ -79,6 +77,6 @@
 
    checkpoint和replay过程相关的代码 
    
-   3day
+   2day
 
 2. 自测 2day
