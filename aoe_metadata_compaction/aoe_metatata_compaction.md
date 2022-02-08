@@ -57,7 +57,7 @@
 
      type catalogLogEntry struct {
 	     Databases map[string]*databaseCheckpoint
-         safeId    map[uint64]uint64
+         SafeId    map[uint64]uint64
 	     Range     *common.Range
      }
 
