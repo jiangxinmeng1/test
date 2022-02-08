@@ -10,7 +10,7 @@
 
    1. 触发时机
    
-        通过catalog.checkpointer触发。每间隔DefaultCheckpointInterval时间检查当前的commit id和上次checkpoint id之间的commit数量。如果commit数量大于DefaultCheckpointDelta，则触发checkpoint。
+        通过catalog.checkpointer触发。每间隔DefaultCheckpointInterval时间检查当前的commit id和上次checkpoint id之间的commit数量。如果commit数量大于DefaultCheckpointDelta(当前是10000)，则触发checkpoint。
         ```golang
         //用HeartBeater定时检查
           catalog.checkpointer = worker.NewHeartBeater(DefaultCheckpointInterval, &catalogCheckpointer{
