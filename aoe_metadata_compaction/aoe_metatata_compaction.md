@@ -76,7 +76,7 @@
    
     遍历catalog, catalogLogEntry。
    
-    删除databaseSet和tableSet中不存在的database和table。
+    删除catalogLogEntry中不存在的database和table。
 
     更新logEntry中提到的database, table, segment, block, 类似对应的onReplay函数。
 
