@@ -34,51 +34,56 @@
       记录的范围是上次checkpoint后发生变化的database, table, segment, block和所有database的safeid。只会记录最新的commit信息。
 
       会额外记录所有database的名字，和每个database中所有table的名字。用来检查上次checkpoint与本次之间被删除的database和table。
-    ```golang
-    
-     
-    type segmentCheckpoint struct {
-	      Blocks     []*blockLogEntry
-	     NeedReplay bool
-	     LogEntry   segmentLogEntry
-     }
+      ```golang
+      type segmentCheckpoint struct {
+	       Blocks     []*blockLogEntry
+	       NeedReplay bool
+	       LogEntry   segmentLogEntry
+       }
+ 
+      type tableCheckpoint struct {
+ 	        Segments   []*segmentCheckpoint
+	        NeedReplay bool
+	        LogEntry   tableLogEntry
+       }
 
-     type tableCheckpoint struct {
-	     Segments   []*segmentCheckpoint
-	     NeedReplay bool
-	     LogEntry   tableLogEntry
-     }
+      type databaseCheckpoint struct {
+	        Tables     map[string]*tableCheckpoint
+	        NeedReplay bool
+	        LogEntry   databaseLogEntry
+       }
 
-     type databaseCheckpoint struct {
-	     Tables     map[string]*tableCheckpoint
-	     NeedReplay bool
-	     LogEntry   databaseLogEntry
-     }
-
-     type catalogLogEntry struct {
-	     Databases map[string]*databaseCheckpoint
-         SafeId    map[uint64]uint64
-	     Range     *common.Range
-     }
-
-    ```
-
+      type catalogLogEntry struct {
+	        Databases map[string]*databaseCheckpoint
+            SafeId    map[uint64]uint64//每个database的safe id
+	        Range     *common.Range//left: 上次的checkpoint id + 1， right: 当前的commit id
+       }
+       ```
+      记录每个database的safeId
+      ```golang
+      func (mgr *manager) GetAllShardCheckpointId() map[uint64]uint64 {
+	      ids := make(map[uint64]uint64)
+	      mgr.safemu.RLock()
+      	defer mgr.safemu.RUnlock()
+      	for shardId, id := range mgr.safeids {//直接拷贝wal里的safeids
+      		ids[shardId] = id
+      	}
+      	return ids
+      }
+      ```
+ 
 2. replay
    
-  遍历catalog, catalogLogEntry。
+    遍历catalog, catalogLogEntry。
    
-  删除databaseSet和tableSet中不存在的database和table。
+    删除databaseSet和tableSet中不存在的database和table。
 
-  更新logEntry中提到的database, table, segment, block, 类似onReplay函数。
+    更新logEntry中提到的database, table, segment, block, 类似对应的onReplay函数。
 
-  覆盖恢复wal里每个shard的safeId。
+    用replayer.cache.OnShardSafeId恢复wal里每个shard的safeId。
 
 ## 任务拆解
 
-1. 添加logstore, metadata包下的注释
-
-   checkpoint和replay过程相关的代码 
-   
-   2day
+1. checkpoint和replay过程相关的代码 2day
 
 2. 自测 2day
