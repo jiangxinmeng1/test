@@ -65,11 +65,13 @@
 
 2. replay
    
-  遍历catalog, databaseSet和tableSet
+  遍历catalog, catalogLogEntry。
    
   删除databaseSet和tableSet中不存在的database和table。
 
   更新logEntry中提到的database, table, segment, block, 类似onReplay函数。
+
+  覆盖恢复wal里每个shard的safeId。
 
 ## 任务拆解
 
