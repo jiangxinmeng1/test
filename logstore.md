@@ -36,3 +36,12 @@
    vinfo提供接口，返回当前vfile的元数据。供replay handler使用。
 
    syncbase提供接口，返回logstore的元数据，在生成checkpoint entry的时候使用。
+
+
+## 任务拆解
+
+1. 更改vinfo和syncbase格式，和相关函数（e.g. syncBase.SetCheckpointed）
+
+2. vinfo提供接口，从文件中读取元数据
+
+3. rotatefile打开时恢复history和全局元数据（syncbase）
