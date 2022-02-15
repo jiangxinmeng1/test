@@ -33,9 +33,19 @@
 
    全局和分区的元数据都在打开rotatefile的时候恢复到内存中。
 
-   vinfo提供接口，返回当前vfile的元数据。供replay handler使用。
+   vinfo提供接口，返回当前vfile的元数据。供replay handler使用，以及syncbase同步元数据时读取。
 
    syncbase提供接口，返回logstore的元数据，在生成checkpoint entry的时候使用。
+
+   对外，元数据从syncbase中取，例如：
+
+   ```golang
+   func (base *syncBase) GetPenddings(groupName string) uint64 {
+   	ckp := base.GetCheckpointed(groupName)
+   	commit := base.GetSynced(groupName)
+   	return commit - ckp
+   }
+   ```
 
 
 ## 任务拆解
