@@ -33,7 +33,7 @@
 
    全局和分区的元数据都在打开rotatefile的时候恢复到内存中。
 
-   vinfo提供接口，返回当前vfile的元数据。供replay handler使用，以及syncbase同步元数据时读取。
+   vinfo提供接口，返回当前vfile的元数据。供replay handler使用。
 
    syncbase提供接口，返回logstore的元数据，在生成checkpoint entry的时候使用。
 
